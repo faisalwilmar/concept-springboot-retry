@@ -16,6 +16,10 @@ public interface BookLedger {
     public BookLedgerResponse postNewBookLedger(String bookName);
 
     @Recover
-    public BookLedgerResponse getBackendResponseFallback(HttpClientErrorException e,
-                                             String bookName);
+    public BookLedgerResponse getBackendResponse4xxFallback(HttpClientErrorException e,
+                                                            String bookName);
+
+    @Recover
+    public BookLedgerResponse getBackendResponse5xxFallback(HttpServerErrorException e,
+                                                            String bookName);
 }

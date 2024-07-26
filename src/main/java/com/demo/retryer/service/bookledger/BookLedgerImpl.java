@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +30,13 @@ public class BookLedgerImpl implements BookLedger {
     }
 
     @Override
-    public BookLedgerResponse getBackendResponseFallback(HttpClientErrorException e, String bookName) {
+    public BookLedgerResponse getBackendResponse4xxFallback(HttpClientErrorException e, String bookName) {
+        log.error(LocalDateTime.now() + " [Fallback] Fallback called after multiple retry errors: " + e.getMessage());
+        return new BookLedgerResponse(false, "400", bookName);
+    }
+
+    @Override
+    public BookLedgerResponse getBackendResponse5xxFallback(HttpServerErrorException e, String bookName) {
         log.error(LocalDateTime.now() + " [Fallback] Fallback called after multiple retry errors: " + e.getMessage());
         return new BookLedgerResponse(false, "500", bookName);
     }
